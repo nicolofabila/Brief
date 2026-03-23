@@ -1,0 +1,24 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Bookmarked article for a client `sessionId` (stored in localStorage).
+model SavedArticle {
+  id        String   @id @default(cuid())
+  sessionId String
+  pmid      String
+  title     String
+  journal   String?
+  pubDate   String?
+  abstract  String?  @db.Text
+  createdAt DateTime @default(now())
+
+  @@unique([sessionId, pmid])
+  @@index([sessionId])
+}
